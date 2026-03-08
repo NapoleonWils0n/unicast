@@ -117,15 +117,11 @@ fn run_ffmpeg(urls: Vec<String>, is_local: bool, mut client: &TcpStream) {
                 let _ = child.kill();
                 let _ = child.wait();
 
-                // Cross-platform terminal reset using crossterm
-                // This replaces 'stty sane' and works on Windows Command Prompt/PowerShell
-                use crossterm::terminal::{disable_raw_mode, LeaveAlternateScreen};
-                use crossterm::execute;
-                
-                let _ = disable_raw_mode();
-                let _ = execute!(std::io::stdout(), LeaveAlternateScreen);
-
-//                let _ = Command::new("stty").arg("sane").status();
+                // Only run stty sane on Unix platforms (Linux, macOS, FreeBSD, NixOS)
+                #[cfg(unix)]
+                {
+                    let _ = Command::new("stty").arg("sane").status();
+                }
 
                 println!("\n+ disconnected: terminal restored");
                 return;
