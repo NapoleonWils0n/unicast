@@ -175,7 +175,7 @@ fn main() {
         println!("+ streaming: {}", url);
         run_ffmpeg(urls, false, &client);
     } else if let Some(playlist_url) = args.playlist {
-        println!("+ Loading playlist...");
+        println!("+ loading playlist...");
         let output = Command::new("yt-dlp")
             .args(["--flat-playlist", "--print", "id", &playlist_url])
             .output()
@@ -183,8 +183,10 @@ fn main() {
 
         for id in String::from_utf8_lossy(&output.stdout).lines() {
             let full_url = format!("https://www.youtube.com/watch?v={}", id);
-            println!("+ Streaming: {}", id);
+            println!("+ fetching: {}", full_url);
             let urls = get_yt_urls(&full_url);
+
+            println!("+ streaming: {}", full_url);
             run_ffmpeg(urls, false, &client);
         }
     }
