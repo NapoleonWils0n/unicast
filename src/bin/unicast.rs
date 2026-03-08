@@ -153,7 +153,7 @@ fn main() {
     let addr = format!("0.0.0.0:{}", args.port);
     
     let listener = TcpListener::bind(&addr).expect("Could not bind to port");
-    println!("+ connection ready");
+    println!("+ listening");
 
     let (mut client, _) = listener.accept().expect("Failed to accept connection");
 
@@ -170,7 +170,7 @@ fn main() {
         println!("+ streaming: {}", file);
         run_ffmpeg(vec![file], true, &client);
     } else if let Some(url) = args.url {
-        println!("+ aquiring stream: {}", url);
+        println!("+ fetching: {}", url);
         let urls = get_yt_urls(&url);
         println!("+ streaming: {}", url);
         run_ffmpeg(urls, false, &client);
@@ -189,6 +189,6 @@ fn main() {
         }
     }
 
-    println!("\n+ Stream finished. Closing connection...");
+    println!("\n+ done");
     let _ = client.shutdown(std::net::Shutdown::Both);
 }
