@@ -3,4 +3,9 @@ name = "unicast"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "unicast"
+path = "src/bin/unicast.rs"
+
 [dependencies]
+clap = { version = "4.0", features = ["derive"] }
