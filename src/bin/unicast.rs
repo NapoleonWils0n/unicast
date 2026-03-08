@@ -123,7 +123,6 @@ fn run_ffmpeg(urls: Vec<String>, is_local: bool, mut client: &TcpStream) {
                     let _ = Command::new("stty").arg("sane").status();
                 }
 
-                println!("\n+ disconnected: terminal restored");
                 return;
             }
         }
