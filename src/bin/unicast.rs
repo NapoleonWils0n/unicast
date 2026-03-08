@@ -116,8 +116,18 @@ fn run_ffmpeg(urls: Vec<String>, is_local: bool, mut client: &TcpStream) {
                 // immediately follow up with stty sane to guarantee terminal recovery.
                 let _ = child.kill();
                 let _ = child.wait();
-                let _ = Command::new("stty").arg("sane").status();
-                println!("\n+ iPad disconnected: terminal restored");
+
+                // Cross-platform terminal reset using crossterm
+                // This replaces 'stty sane' and works on Windows Command Prompt/PowerShell
+                use crossterm::terminal::{disable_raw_mode, LeaveAlternateScreen};
+                use crossterm::execute;
+                
+                let _ = disable_raw_mode();
+                let _ = execute!(std::io::stdout(), LeaveAlternateScreen);
+
+//                let _ = Command::new("stty").arg("sane").status();
+
+                println!("\n+ disconnected: terminal restored");
                 return;
             }
         }
