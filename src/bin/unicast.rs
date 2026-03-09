@@ -12,7 +12,14 @@ use std::process::{Command, Stdio};
 /// Command-line arguments definition using the Clap derive macro.
 /// Provides options for local files (-l), single URLs (-u), and playlists (-p).
 #[derive(Parser, Debug)]
-#[command(author, version, about = "Unified Streamer: Stream local files or URLs to VLC")]
+#[command(
+    author,
+    version,
+    about = "unicast: stream local files or urls",
+    after_help = "Dependencies:\n  ffmpeg, ffprobe: https://www.ffmpeg.org/\n\n  yt-dlp: https://github.com/yt-dlp/yt-dlp\n  deno: https://deno.com/",
+    override_usage = "unicast -l <LOCAL FILE> -u <URL> -p <PLAYLIST>"
+)]
+
 #[clap(disable_version_flag = true, disable_help_flag = true)]
 struct Args {
     /// Path to a local media file
