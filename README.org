@@ -1,0 +1,1396 @@
+#+STARTUP: show2levels
+#+OPTIONS: num:nil author:nil
+* unicast
+** Project overview
+
+unicast
+
+Stream web URLs, playlists, and local files to a network client.
+
+This script acts as a lightweight HTTP server that pipes media via FFmpeg.
+
+*** Supported Operating Systems
+
+This project is designed to be cross-platform and work on:
+
+1) NixOS (via Home Manager)
+
+2) Linux (standard distributions like Ubuntu, Arch, etc.)
+
+3) Windows (Windows 10/11)
+
+4) macOS
+
+5) FreeBSD
+
+*** Binary Availability & Compilation
+
+Statically Compiled Binaries: Provided for NixOS, Linux, Windows, MacOS and Freebsd
+
+These are standalone executables that do not require a Rust runtime to be installed on your system.
+
+** Installation instructions
+
+Choose your operating system below for specific installation steps,
+including dependency management and environment path configuration.
+
++ [[#nixos-install][NixOS]]
++ [[#linux-install][Linux]]
++ [[#windows-install][Windows]]
++ [[#mac-install][Mac]]
++ [[#freebsd-install][Freebsd]]
+
+** Scripts install
+*** NixOS install
+:PROPERTIES:
+:CUSTOM_ID: nixos-install
+:END:
+
+**** Install Dependencies
+
+Install dependencies with home-manager by adding the following packages.
+
+[[https://github.com/nix-community/home-manager]]
+
+#+begin_example
+ffmpeg-full
+yt-dlp
+deno
+#+end_example
+
+**** Environment Path Setup
+***** create bin directory
+
+Create a bin directory in your home folder to store the scripts.
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+***** zsh shell
+
+#+begin_example
+~/.zshenv
+#+end_example
+
+If you are using zsh add the following code to your ~/.zshenv file
+
+This sets up the PATH for the rust scripts and configures the ffplay video driver.
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+#+end_src
+
+To ensure ffplay renders correctly on NixOS,
+you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
+
+Set ffplay driver: use either 'wayland' or 'x11'
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Source your ~/.zshenv if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshenv
+#+END_SRC
+
+***** bash shell
+
+#+begin_example
+~/.bashrc
+#+end_example
+
+If you are using bash add the following code to your ~/.bashrc
+
+This sets up the PATH for the rust scripts and configures the ffplay video driver.
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
+To ensure ffplay renders correctly on NixOS,
+you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
+
+Set ffplay driver: use either 'wayland' or 'x11'
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+**** Release download
+
+Download the latest NixOS release archive and sha256sum check sum
+and then follow these steps to install the binaries.
+
+[[https://github.com/NapoleonWils0n/unicast/releases]]
+
+***** check the sha256sum check sum
+
+Open your terminal and run the following command:
+
+#+begin_src sh
+sha256sum -c nixos-unicast-v1.tar.gz.sha256
+#+end_src
+
+#+begin_example
+Expected Output: nixos-unicast-v1.tar.gz: OK
+#+end_example
+
+***** Extract the archive
+
+Note: Replace v4 with the actual version number you downloaded.
+
+#+begin_src sh
+tar -xf nixos-unicast-v1.tar.gz
+#+end_src
+
+***** Deploy the scripts
+
+Move the extracted binaries into your local ~/bin directory.
+
+#+begin_src sh
+mv nixos-unicast-v1/* ~/bin/
+#+end_src
+
+*** Linux install
+:PROPERTIES:
+:CUSTOM_ID: linux-install
+:END:
+
+**** ffmpeg install
+
+Install ffmpeg on debian or ubuntu,
+for other linux distros see the documentation for your package manager
+
+#+BEGIN_SRC sh
+sudo apt install ffmpeg
+#+END_SRC
+
+**** yt-dlp install
+
+yt-dlp needed for trim-remote-clip
+
+***** download yt-dlp
+
+#+begin_src sh
+curl 'https://github.com/yt-dlp/yt-dlp/releases/download/2025.12.08/yt-dlp' -o ~/bin/yt-dlp 
+#+end_src
+
+***** make yt-dlp executable
+
+#+begin_src sh
+chmod +x ~/bin/yt-dlp 
+#+end_src
+
+yt-dlp upgrade
+
+#+begin_src sh
+yt-dlp -U
+#+end_src
+
+***** install deno
+
+#+begin_src sh
+curl -fsSL https://deno.land/install.sh | sh 
+#+end_src
+
+upgrade deno
+
+#+begin_src sh
+deno upgrade
+#+end_src
+
+**** Environment Path Setup
+***** create bin directory
+
+Create a bin directory in your home folder to store the scripts.
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+***** zsh shell
+
+#+begin_example
+~/.zshenv
+#+end_example
+
+If you are using zsh add the following code to your ~/.zshenv file
+
+This sets up the PATH for the rust scripts, yt-dlp, and deno, and configures the ffplay video driver.
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "${HOME}/.deno/bin" "$path[@]")
+export PATH
+#+end_src
+
+To ensure ffplay renders correctly on Linux,
+you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
+
+Set ffplay driver: use either 'wayland' or 'x11'
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Source your ~/.zshenv if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshenv
+#+END_SRC
+
+***** bash shell
+
+#+begin_example
+~/.bashrc
+#+end_example
+
+If you are using bash add the following code to your ~/.bashrc
+
+This sets up the PATH for the rust scripts, yt-dlp, and deno, and configures the ffplay video driver.
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$HOME/.deno/bin:$PATH"
+fi
+#+END_SRC
+
+To ensure ffplay renders correctly on Linux,
+you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
+
+Set ffplay driver: use either 'wayland' or 'x11'
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+**** Release download
+
+Download the latest Linux release archive and sha256sum check sum
+and then follow these steps to install the binaries.
+
+[[https://github.com/NapoleonWils0n/unicast/releases]]
+
+***** check the sha256sum check sum
+
+Open your terminal and run the following command:
+
+#+begin_src sh
+sha256sum -c linux-unicast-v1.tar.gz.sha256
+#+end_src
+
+#+begin_example
+Expected Output: linux-unicast-v1.tar.gz: OK
+#+end_example
+
+***** Extract the archive
+
+Note: Replace v4 with the actual version number you downloaded.
+
+#+begin_src sh
+tar -xf linux-unicast-v1.tar.gz
+#+end_src
+
+***** Deploy the scripts
+
+Move the extracted binaries into your local ~/bin directory.
+
+#+begin_src sh
+mv linux-unicast-v1/* ~/bin/
+#+end_src
+
+*** Windows install
+:PROPERTIES:
+:CUSTOM_ID: windows-install
+:END:
+
+This section covers how to install the necessary dependencies and the Rust scripts on Windows.
+
+We recommend using the Chocolatey package manager to install ffmpeg, yt-dlp, and deno quickly.
+However, you can also install these tools manually from their respective websites if you prefer.
+
+**** Chocolatey
+
+[[https://chocolatey.org/]]
+
+The first step is to open PowerShell on your Windows 11 computer, and that too with administrator privileges.
+Opening PowerShell with administrator privileges is important, as you will be unable to install Chocolatey without that.
+
+Now type in the following command to know the execution policy status of PowerShell.
+
+#+begin_example
+Get-ExecutionPolicy
+#+end_example
+
+If it says ‘Restricted’,
+type in the following command as shown below, all on the PowerShell with administrator privileges.
+
+#+begin_example
+Set-ExecutionPolicy AllSigned
+#+end_example
+
+You will have to type ‘Y’ and hit the enter key when you will be asked for a confirmation.
+
+Now run the following command:
+
+#+begin_example
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+#+end_example
+
+**** Install Dependencies
+
+Install dependencies with Chocolatey.
+
+#+begin_src sh
+choco install ffmpeg yt-dlp deno
+#+end_src
+
+**** upgrade packages
+
+upgrade Chocolatey
+
+open powershell as an administrator
+
+#+begin_src sh
+choco upgrade chocolatey
+#+end_src
+
+upgrade packages
+
+#+begin_src sh
+choco upgrade all
+#+end_src
+
+**** Environment Path Setup
+
+You need to put the .exe files in a place where Windows can find them.
+
+We recommend creating a bin folder in your User directory.
+
+***** Automatic Setup (Recommended)
+
+This is the easiest method and should be performed as a regular user (you do not need Administrator privileges).
+
+Open PowerShell and paste the following code.
+
+It will create the C:\Users\YourName\bin folder and automatically add it to your Path.
+
+#+begin_src sh
+$binDir = "$HOME\bin"; if (!(Test-Path $binDir)) { New-Item -ItemType Directory -Path $binDir }; $oldPath = [Environment]::GetEnvironmentVariable("Path", "User"); if ($oldPath -notlike "$binDir") { $newPath = "$oldPath;$binDir".Replace(";;", ";"); [Environment]::SetEnvironmentVariable("Path", $newPath, "User"); $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine"); Write-Host "Success! Folder created and Path updated." } else { Write-Host "Path already exists." }
+#+end_src
+
+After running the command, restart PowerShell for the changes to take effect.
+
+***** Manual Setup
+
+If you prefer to manage your folders manually, follow these steps:
+
+1) Create a folder named bin in your User directory (e.g., C:\Users\YourName\bin).
+
+2) Open the Start Menu, search for Edit the system environment variables, and open it.
+
+3) Click Environment Variables.
+
+4) Under User variables, select Path and click Edit.
+
+5) Click New and paste the full path to your bin folder.
+
+6) Click OK on all windows to save.
+
+***** Add Windows Defender Exclusion
+
+Because these scripts are unsigned and perform system-level tasks (like calling FFmpeg), Windows Defender may flag them as a False Positive threat.
+
+To prevent the scripts from being quarantined or deleted, add your bin folder as an exclusion.
+
+1) Open the Start Menu and type Windows Security, then press Enter.
+2) Go to Virus and threat protection.
+3) Under Virus and threat protection settings, click Manage settings.
+4) Scroll down to Exclusions and click Add or remove exclusions.
+5) Click Add an exclusion and select Folder.
+6) Browse to and select the bin folder you created for these scripts.
+
+This tells Windows Defender to trust all binaries within that specific directory.
+
+**** Release Download
+
+Download the latest Windows release archive and sha256sum check sum
+and then follow these steps to install the binaries.
+
+[[https://github.com/NapoleonWils0n/unicast/releases]]
+
+***** check the sha256sum check sum
+
+Open PowerShell and run the following commands to compare the hash:
+
+1. View the expected hash
+
+#+begin_src sh
+cat .\windows-ffmpeg-rust-scripts-v4.zip.sha256
+#+end_src
+
+2. Calculate the actual hash
+
+#+begin_src sh
+Get-FileHash .\windows-ffmpeg-rust-scripts-v4.zip -Algorithm SHA256
+#+end_src
+
+Note: Ensure the strings match.
+
+Alternatively, if you have Git Bash installed on Windows, you can use the
+
+#+begin_src sh
+sha256sum -c windows-ffmpeg-rust-scripts-v4.zip.sha256
+#+end_src
+
+***** Unblock the Zip File
+
+Before extracting the scripts, you must unblock the downloaded file.
+
+Windows often restricts files downloaded from the internet, which can cause the scripts to fail or be deleted immediately upon extraction.
+
+Note: In the steps below, replace "v4" with the specific version number of the release you downloaded (e.g., v0.3.0).
+
+1) Right-click the downloaded windows-ffmpeg-rust-scripts-v4.zip.
+2) Select Properties.
+3) At the bottom of the General tab, look for the Security section.
+4) Check the box labeled Unblock.
+5) Click Apply and then OK.
+
+***** Extract and Install
+
+Use the Windows File Manager (Explorer) to extract the zip file to ensure all permissions are handled correctly.
+
+1) Right-click the windows-ffmpeg-rust-scripts-v4.zip file and select Extract All.
+2) Follow the prompts to finish the extraction.
+3) Move all the .exe files from the extracted folder into the bin directory you created in the previous step.
+
+***** Verify Installation
+
+Open a new PowerShell window and run the version command for one of the scripts to verify it is working:
+
+#+begin_src sh
+extract-frame -v
+#+end_src
+
+*** Mac install
+:PROPERTIES:
+:CUSTOM_ID: mac-install
+:END:
+
+Note: Binaries for MacOS are now available.
+
+**** homebrew install
+
+[[https://brew.sh/]]
+
+Install the Homebrew package manager.
+Run the following command in the terminal to install homebrew.
+
+#+begin_src sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#+end_src
+
+Note: When the installer finishes, look for the "Next steps" section in your terminal.
+You must run the commands provided there to add Homebrew to your system PATH.
+
+- Run these commands in your terminal to add Homebrew to your PATH:
+
+#+begin_src sh
+echo >> /Users/${USER}/.zprofile
+#+end_src
+
+#+begin_src sh
+echo 'eval "$(/usr/local/bin/brew shellenv zsh)"' >> /Users/${USER}/.zprofile
+#+end_src
+
+#+begin_src sh
+eval "$(/usr/local/bin/brew shellenv zsh)"
+#+end_src
+
+**** Install Dependencies
+
+Install dependencies with homebrew,
+by running the following command in the terminal.
+
+#+begin_src sh
+brew install ffmpeg yt-dlp deno
+#+end_src
+
+**** Environment Path Setup
+***** create bin directory
+
+Create a bin directory in your home folder to store the scripts.
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+***** zsh shell
+
+edit your ~/.zshenv file
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+Add the following code to your ~/.zshenv file.
+This is the default shell for macOS.
+
+This sets up the PATH for the rust scripts.
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+#+end_src
+
+Source the configuration to apply changes.
+
+#+BEGIN_SRC sh
+source ~/.zshenv
+#+END_SRC
+
+***** bash shell
+
+#+begin_example
+~/.bashrc
+#+end_example
+
+If you are using bash add the following code to your ~/.bashrc
+
+This sets up the PATH for the rust scripts.
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
+Source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+**** Release download
+
+Download the latest Mac release archive and sha256sum check sum
+and then follow these steps to install the binaries.
+
+[[https://github.com/NapoleonWils0n/unicast/releases]]
+
+***** check the sha256sum check sum
+
+Open your terminal and run the following command:
+
+#+begin_src sh
+shasum -a 256 -c mac-unicast-v1.zip.sha256
+#+end_src
+
+#+begin_example
+Expected Output: mac-unicast-v1.zip: OK
+#+end_example
+
+***** Extract the archive
+
+Note: Replace v4 with the actual version number you downloaded.
+
+#+begin_src sh
+unzip mac-unicast-v1.zip
+#+end_src
+
+***** Deploy the scripts
+
+Move the extracted binaries into your local ~/bin directory.
+
+#+begin_src sh
+mv mac-ffmpeg-unicast-v1/* ~/bin/
+#+end_src
+
+If you have issues running the scripts
+
+Because these binaries are not signed with an Apple Developer ID, macOS may place them in "Quarantine" upon download.
+
+This results in an error stating the developer cannot be verified.
+
+To authorize the entire fleet of scripts at once,
+run the following command to remove the quarantine flag from your bin directory:
+
+#+begin_src sh
+xattr -rd com.apple.quarantine ~/bin/
+#+end_src
+
+**** Xcode install
+
+Note: you only need to install xcode and rust if you want to build the scripts.
+
+You can now just download the release.
+
+Install the Xcode Command Line Tools to provide the necessary compilers,
+by running the following command in the terminal.
+
+#+begin_src sh
+xcode-select --install
+#+end_src
+
+**** Rust install
+
+Install the Rust toolchain using rustup.
+
+#+begin_src sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
+
+**** Compile and Install
+
+If you want to compile the scripts on MacOS instead of downloading the binaries,
+follow these steps to build the binaries and move them to your bin folder.
+
+***** Clone the git repository
+
+Create a directory to store the git repository in your home directory.
+
+#+begin_src sh
+mkdir -p ~/git 
+#+end_src
+
+Change into the git directory in your home.
+
+#+begin_src sh
+cd ~/git
+#+end_src
+
+Run the following command in the terminal to clone the unicast git repository.
+
+#+begin_src sh
+git clone https://github.com/NapoleonWils0n/unicast
+#+end_src
+
+***** Build the project using Cargo.
+
+Change directory into the unicast git repository.
+
+#+begin_src sh
+cd unicast
+#+end_src
+
+Build the project with Cargo.
+
+#+begin_src sh
+cargo build --release
+#+end_src
+
+When you run cargo build --release,
+Rust places the binaries in target/release/
+
+Use fd to copy the scripts to the bin directory in your home.
+
+#+begin_src sh
+fd . target/release --max-depth 1 --type executable --exec cp {} ~/bin/
+#+end_src
+
+*** Freebsd install
+:PROPERTIES:
+:CUSTOM_ID: freebsd-install
+:END:
+
+Note: Binaries for Freebsd are now available.
+
+**** Install Dependencies
+
+Install dependencies with pkg.
+
+#+BEGIN_SRC sh
+sudo pkg install ffmpeg yt-dlp deno
+#+END_SRC
+
+**** Environment Path Setup
+***** create bin directory
+
+Create a bin directory in your home folder to store the scripts.
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+***** sh shell
+
+#+begin_src sh
+vi ~/.profile
+#+end_src
+
+For the default shell (sh or tcsh) shell on Freebsd,
+edit your shell ~/.profile
+
+add this code to your ~/.profile file.
+
+#+begin_src sh
+if [ -d "$HOME/bin" ]; then
+    PATH="$HOME/bin:$PATH"
+fi
+#+end_src
+
+Set ffplay driver: use either 'wayland' or 'x11'
+
+Note for the sh shell you need to use export
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Note for the tcsh shell you need to use setenv
+
++ wayland
+
+#+begin_src sh
+setenv SDL_VIDEODRIVER wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+setenv SDL_VIDEODRIVER x11
+#+end_src
+
+Reload your ~/.profile
+
+#+BEGIN_SRC sh
+. ~/.profile
+#+END_SRC
+
+***** zsh shell
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+If you are using zsh add the following code to your ~/.zshenv file
+
+This sets up the PATH for the rust scripts.
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+#+end_src
+
+To ensure ffplay renders correctly on Freebsd,
+you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
+
+Set ffplay driver: use 'wayland' or 'x11'
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Source your ~/.zshenv if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshenv
+#+END_SRC
+
+***** bash shell
+
+#+begin_src sh
+vi ~/.bashrc
+#+end_src
+
+If you are using bash add the following code to your ~/.bashrc
+
+This sets up the PATH for the rust scripts.
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
+To ensure ffplay renders correctly on Freebsd,
+you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
+
+Set ffplay driver: use 'wayland' or 'x11'
+
++ wayland
+
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+#+end_src
+
++ X11
+
+#+begin_src sh
+export SDL_VIDEODRIVER=x11
+#+end_src
+
+Source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+**** Release download
+
+Download the latest Freebsd release archive and sha256sum check sum
+and then follow these steps to install the binaries.
+
+[[https://github.com/NapoleonWils0n/unicast/releases]]
+
+***** check the sha256sum check sum
+
+Open your terminal and run the following command:
+
+#+begin_src sh
+sha256sum -c freebsd-unicast-v1.tar.gz.sha256
+#+end_src
+
+#+begin_example
+Expected Output: freebsd-unicast-v1.tar.gz: OK
+#+end_example
+
+***** Extract the archive
+
+Note: Replace v1 with the actual version number you downloaded.
+
+#+begin_src sh
+tar -xf freebsd-unicast-v1.tar.gz
+#+end_src
+
+***** Deploy the scripts
+
+Move the extracted binaries into your local ~/bin directory.
+
+#+begin_src sh
+mv freebsd-unicast-v1/* ~/bin/
+#+end_src
+
+**** Rust install
+
+If you want to compile the scripts on Freebsd instead of downloading the binaries,
+follow these steps to build the binaries and move them to your bin folder.
+
+Install the required tools and the Rust toolchain using the pkg manager.
+Run the following command in the terminal to install Rust.
+
+#+begin_src sh
+sudo pkg install rust git
+#+end_src
+
+**** Compile and Install
+
+Since Freebsd requires manual compilation,
+follow these steps to build the binaries and move them to your bin folder.
+
+***** Clone the git repository
+
+Create a directory to store the git repository in your home directory.
+
+#+begin_src sh
+mkdir -p ~/git 
+#+end_src
+
+Change into the git directory in your home.
+
+#+begin_src sh
+cd ~/git
+#+end_src
+
+Run the following command in the terminal to clone the ffmpeg-scripts-rust git repository.
+
+#+begin_src sh
+git clone https://github.com/NapoleonWils0n/unicast
+#+end_src
+
+***** Build the project using Cargo.
+
+Change directory into the ffmpeg-rust-scripts git repository.
+
+#+begin_src sh
+cd unicast
+#+end_src
+
+Build the project with Cargo.
+
+#+begin_src sh
+cargo build --release
+#+end_src
+
+When you run cargo build --release,
+Rust places the binaries in target/release/
+
+Use fd to copy the scripts to the bin directory in your home.
+
+#+begin_src sh
+fd . target/release --max-depth 1 --type executable --exec cp {} ~/bin/
+#+end_src
+
+** NixOS Build and Distribution
+
+This section covers how to compile the scripts for different platforms using Nix.
+We use three distinct targets to ensure maximum compatibility.
+
+*** Setup Build Workspace
+
+First, create a structured directory on your Desktop to collect the finished binaries.
+
+Create directories for each target platform
+
+#+begin_src sh
+mkdir -p ~/Desktop/build/{nixos,linux,windows}
+#+end_src
+
+Optional: Clean existing binaries if doing a fresh release
+
+#+begin_src sh
+rm -f ~/Desktop/build/{nixos,linux,windows}/*
+#+end_src
+
+*** flake.nix
+**** create the project directory
+
+#+begin_src sh
+mkdir -p ~/git/projects/ffmpeg-rust-scripts/
+#+end_src
+
+change directory into the project directory
+
+#+begin_src sh
+cd ~/git/projects/ffmpeg-rust-scripts/
+#+end_src
+
+**** create the flake.nix
+
+#+begin_src sh
+vi flake.nix
+#+end_src
+
+flake.nix
+
+#+begin_src nix
+{
+  description = "rust flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    naersk.url = "github:nix-community/naersk";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, naersk, rust-overlay, flake-utils }: 
+    flake-utils.lib.eachDefaultSystem (system:
+    let
+      # system is already provided by eachDefaultSystem, so we don't define it here
+      overlays = [ (import rust-overlay) ];
+      pkgs = import nixpkgs { inherit system overlays; };
+
+      rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        extensions = [ "rust-src" "rust-analyzer" ];
+        targets = [ "x86_64-unknown-linux-musl" "x86_64-pc-windows-gnu" ]; 
+      };
+
+      naerskLib = (naersk.lib.${system}.override {
+        cargo = rustToolchain;
+        rustc = rustToolchain;
+      });
+    in {
+      devShells.default = pkgs.mkShell {
+        # ADD MINGW TO THE SHELL FOR LINKING
+        buildInputs = [ 
+          rustToolchain 
+          pkgs.pkgsCross.mingwW64.stdenv.cc 
+        ];
+
+
+        # Tell Cargo which linker to use for Windows
+        # Add these lines to help the linker find pthreads
+        shellHook = ''
+          export RUST_SRC_PATH="${rustToolchain}/lib/rustlib/src/rust/library"
+          export NIX_CROSS_LDFLAGS="-L${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib"
+          export NIX_CROSS_CFLAGS_COMPILE="-I${pkgs.pkgsCross.mingwW64.windows.pthreads}/include"
+          export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="x86_64-w64-mingw32-gcc"
+          export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L ${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib"
+        '';
+      };
+
+      packages.default = naerskLib.buildPackage {
+        src = ./.;
+      };
+    } 
+  ); # This closes eachDefaultSystem
+}    # This closes outputs
+
+#+end_src
+
+**** run nix develop
+
+run nix develop which will set up the rust environment
+
+#+begin_src sh
+nix develop
+#+end_src
+
+**** Cargo Initialization
+
+After entering the Nix development environment for the first time, you must initialize the Rust project structure.
+
+***** Initialize the Project
+
+Run cargo init to generate the necessary Rust configuration files and directory structure within the current folder.
+
+#+begin_src sh
+cargo init .
+#+end_src
+
+Note: This command creates a Cargo.toml file and a src/ directory with a default main.rs.
+
+***** Staging Project Files
+
+This will automatically create a git repository
+
+Once initialized, you need to track the following essential files in your git repository:
+
+#+begin_example
+.gitignore
+Cargo.toml
+flake.lock
+flake.nix
+src/
+#+end_example
+
+***** Git Setup
+
+Stage all the newly created files:
+
+#+begin_src sh
+git add .
+#+end_src
+
+Finalize the initialization with an initial commit:
+
+#+begin_src sh
+git commit -m 'project init'
+#+end_src
+
+**** gitignore
+
+a .gitignore file will be created
+
+#+begin_example
+.gitignore
+#+end_example
+
+with the following content
+
+#+begin_src sh
+/target
+#+end_src
+
+we need to edit the .gitignore 
+
+#+begin_src sh
+vi .gitignore
+#+end_src
+
+and a new line to exclude the results symlink
+
+#+begin_src sh
+/target
+/result*
+#+end_src
+
+check the git status
+
+#+begin_src sh
+git status
+#+end_src
+
+and then commit the changes
+
+#+begin_src sh
+git add .gitignore
+#+end_src
+
+and add a commit message
+
+#+begin_src sh
+git commit -m "update .gitignore to exclude build results"
+#+end_src
+
+*** NixOS build
+
+note you do not need to be inside the nix develop shell to run nix build
+
+run nix build to build the binaries for NixOS
+
+#+begin_src sh
+nix build
+#+end_src
+
+This will place your binaries in ./result/bin/ instead of target/release/.
+Building this way ensures the build is 100% reproducible and isolated from your local system state.
+Instead of a simple mv, which might fail if the source is the read-only Nix store, you should copy the binaries.
+
+When you copy a binary out of the Nix store, it keeps its "rpath."
+This means it still knows exactly where to find its library dependencies in the nix store, so it will continue to work perfectly.
+
+Create the bin directory in your home if you dont have one
+
+#+begin_src sh
+mkdir -p ~/bin
+#+end_src
+
+Run this command to copy all 32 binaries at once to the bin directory in your home
+
+#+begin_src sh
+cp ./result/bin/* ~/bin/
+#+end_src
+
+copy the scripts to the build directory on the desktop for github
+
+#+begin_src sh
+cp ./result/bin/* ~/Desktop/build/nixos/
+#+end_src
+
+A Note on Updates
+
+Keep in mind that if you change your Rust code and run nix build again, the binaries in ~/bin will not update automatically.
+You'll just need to run that cp command again to "deploy" your latest versions.
+
+*** Linux build (static)
+
+To build portable binaries that run on any Linux distribution, we use the musl target.
+This statically links all libraries so the binary is self-contained.
+
+You must be inside the nix develop shell to run this command.
+
+#+begin_src sh
+nix develop
+#+end_src
+
+Build the binaries using the musl target
+
+#+begin_src sh
+cargo build --release --target x86_64-unknown-linux-musl
+#+end_src
+
+The binaries will be located in target/x86_64-unknown-linux-musl/release/.
+
+list the binaries
+
+#+begin_src sh
+ls -l target/x86_64-unknown-linux-musl/release/
+#+end_src
+
+How to verify they are truly "Static"
+One of the main reasons to use musl is to ensure the binary has no external dependencies.
+
+You can verify this by running the ldd command on one of the new binaries:
+
+#+begin_src sh
+ldd target/x86_64-unknown-linux-musl/release/scene-detect-auto
+#+end_src
+
+Expected Output: It should say statically linked or not a dynamic executable.
+
+This confirms that a user on Ubuntu, Debian,
+or Arch can just download that file and run it immediately (provided they have ffmpeg installed).
+
+Copy the binaries to the build directory on the desktop
+
+#+begin_src sh
+fd -t f -d 1 -E "*.*" . target/x86_64-unknown-linux-musl/release/ -x cp {} ~/Desktop/build/linux/
+#+end_src
+
+explaination of the fd command
+
+#+begin_example
+-t f: Look for files only.
+
+-d 1: Depth 1 (don't go into subfolders like deps or build).
+
+-E "*.*": Exclude any file with a dot in the name (skips .d, .rlib, etc.).
+
+.: The search pattern (matches everything not excluded).
+
+target/.../release/: The directory to search in.
+
+-x cp {} ...: Execute the copy command for every search result.
+#+end_example
+
+The ! -name "*.*" logic in standard find can sometimes be finicky depending on the shell, but fd's -E (exclude) flag is very robust.
+
+This will cleanly grab your 32 binaries and ignore all the compiler junk.
+
+*** Windows build (static)
+
+To build binaries for Windows, we use the MinGW-w64 toolchain.
+You must be inside the nix develop shell to run this command.
+
+This ensures the environment variables for the linker and library paths are correctly set.
+
+#+begin_src sh
+nix develop
+#+end_src
+
+Build the binaries using the gnu target
+
+#+begin_src sh
+cargo build --release --target x86_64-pc-windows-gnu
+#+end_src
+
+The binaries will be located in target/x86_64-pc-windows-gnu/release/.
+
+list the binaries
+
+#+begin_src sh
+ls -l target/x86_64-pc-windows-gnu/release/*.exe 
+#+end_src
+
+Copy the binaries to the build directory on the desktop
+
+#+begin_src sh
+fd -t f -e exe --max-depth 1 . target/x86_64-pc-windows-gnu/release/ -x cp {} ~/Desktop/build/windows/
+#+end_src
+
+**** Troubleshooting the Windows Build
+
+If the build fails with an error stating it cannot find -l:libpthread.a,
+ensure your flake.nix includes the CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS variable in the shellHook.
+
+If you have recently modified the flake.nix,
+you may need to exit the shell and run nix develop again to refresh the environment.
+
+Running a cargo clean before rebuilding can also help resolve linking conflicts.
+
+#+begin_src sh
+cargo clean
+#+end_src
+
+*** Create the release
+**** rename the build directory on the desktop
+
+#+begin_src sh
+cd ~/Desktop
+#+end_src
+
+Note: replace v1 with the release number in the examples below.
+
+#+begin_src sh
+mv build unicast-build-v1
+#+end_src
+
+Change into the directory
+
+#+begin_src sh
+cd ffmpeg-rust-scripts-build-v1
+#+end_src
+
+**** rename the build directories for nixos, linux and windows
+
+linux
+
+#+begin_src sh
+mv linux linux-unicast-v1
+#+end_src
+
+nixos
+
+#+begin_src sh
+mv nixos nixos-unicast-v1
+#+end_src
+
+windows
+
+#+begin_src sh
+mv windows windows-unicast-v1
+#+end_src
+
+**** compress the releases
+***** linux
+
+#+begin_src sh
+tar -czvf linux-unicast-v1.tar.gz linux-unicast-v1
+#+end_src
+
+***** nixos
+
+#+begin_src sh
+tar -czvf nixos-unicast-v1.tar.gz nixos-unicast-v1
+#+end_src
+
+***** windows
+
+#+begin_src sh
+zip -r windows-unicast-v1.zip windows-unicast-v1
+#+end_src
