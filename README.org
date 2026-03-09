@@ -1361,19 +1361,19 @@ cd ffmpeg-unicast-build-v1
 linux
 
 #+begin_src sh
-mv linux linux-unicast-build-v1
+mv linux linux-unicast-v1
 #+end_src
 
 nixos
 
 #+begin_src sh
-mv nixos nixos-unicast-build-v1
+mv nixos nixos-unicast-v1
 #+end_src
 
 windows
 
 #+begin_src sh
-mv windows windows-unicast-build-v1
+mv windows windows-unicast-v1
 #+end_src
 
 **** compress the releases
