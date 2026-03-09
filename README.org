@@ -61,7 +61,7 @@ deno
 **** Environment Path Setup
 ***** create bin directory
 
-Create a bin directory in your home folder to store the scripts.
+Create a bin directory in your home folder to store the script.
 
 #+BEGIN_SRC sh
 mkdir -p ~/bin
@@ -75,29 +75,12 @@ mkdir -p ~/bin
 
 If you are using zsh add the following code to your ~/.zshenv file
 
-This sets up the PATH for the rust scripts and configures the ffplay video driver.
+This sets up the PATH for the unicast script
 
 #+begin_src sh
 typeset -U PATH path
 path=("$HOME/bin" "$path[@]")
 export PATH
-#+end_src
-
-To ensure ffplay renders correctly on NixOS,
-you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
-
-Set ffplay driver: use either 'wayland' or 'x11'
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
 #+end_src
 
 Source your ~/.zshenv if you are using the zsh shell
@@ -114,30 +97,13 @@ source ~/.zshenv
 
 If you are using bash add the following code to your ~/.bashrc
 
-This sets up the PATH for the rust scripts and configures the ffplay video driver.
+This sets up the PATH for the unicast script
 
 #+BEGIN_SRC sh
 if [ -d "$HOME/bin" ]; then
    PATH="$HOME/bin:$PATH"
 fi
 #+END_SRC
-
-To ensure ffplay renders correctly on NixOS,
-you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
-
-Set ffplay driver: use either 'wayland' or 'x11'
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
-#+end_src
 
 Source your ~/.bashrc if you are using the bash shell
 
@@ -245,29 +211,12 @@ mkdir -p ~/bin
 
 If you are using zsh add the following code to your ~/.zshenv file
 
-This sets up the PATH for the rust scripts, yt-dlp, and deno, and configures the ffplay video driver.
+This sets up the PATH for the unicast script, yt-dlp and deno.
 
 #+begin_src sh
 typeset -U PATH path
 path=("$HOME/bin" "${HOME}/.deno/bin" "$path[@]")
 export PATH
-#+end_src
-
-To ensure ffplay renders correctly on Linux,
-you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
-
-Set ffplay driver: use either 'wayland' or 'x11'
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
 #+end_src
 
 Source your ~/.zshenv if you are using the zsh shell
@@ -284,30 +233,13 @@ source ~/.zshenv
 
 If you are using bash add the following code to your ~/.bashrc
 
-This sets up the PATH for the rust scripts, yt-dlp, and deno, and configures the ffplay video driver.
+This sets up the PATH for the unicast script, yt-dlp, and deno.
 
 #+BEGIN_SRC sh
 if [ -d "$HOME/bin" ]; then
    PATH="$HOME/bin:$HOME/.deno/bin:$PATH"
 fi
 #+END_SRC
-
-To ensure ffplay renders correctly on Linux,
-you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
-
-Set ffplay driver: use either 'wayland' or 'x11'
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
-#+end_src
 
 Source your ~/.bashrc if you are using the bash shell
 
@@ -782,36 +714,6 @@ if [ -d "$HOME/bin" ]; then
 fi
 #+end_src
 
-Set ffplay driver: use either 'wayland' or 'x11'
-
-Note for the sh shell you need to use export
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
-#+end_src
-
-Note for the tcsh shell you need to use setenv
-
-+ wayland
-
-#+begin_src sh
-setenv SDL_VIDEODRIVER wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-setenv SDL_VIDEODRIVER x11
-#+end_src
-
 Reload your ~/.profile
 
 #+BEGIN_SRC sh
@@ -826,29 +728,12 @@ vi ~/.zshenv
 
 If you are using zsh add the following code to your ~/.zshenv file
 
-This sets up the PATH for the rust scripts.
+This sets up the PATH for the unicast script.
 
 #+begin_src sh
 typeset -U PATH path
 path=("$HOME/bin" "$path[@]")
 export PATH
-#+end_src
-
-To ensure ffplay renders correctly on Freebsd,
-you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
-
-Set ffplay driver: use 'wayland' or 'x11'
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
 #+end_src
 
 Source your ~/.zshenv if you are using the zsh shell
@@ -865,30 +750,13 @@ vi ~/.bashrc
 
 If you are using bash add the following code to your ~/.bashrc
 
-This sets up the PATH for the rust scripts.
+This sets up the PATH for the unicast script.
 
 #+BEGIN_SRC sh
 if [ -d "$HOME/bin" ]; then
    PATH="$HOME/bin:$PATH"
 fi
 #+END_SRC
-
-To ensure ffplay renders correctly on Freebsd,
-you must export the correct SDL_VIDEODRIVER for your display server (Wayland or X11).
-
-Set ffplay driver: use 'wayland' or 'x11'
-
-+ wayland
-
-#+begin_src sh
-export SDL_VIDEODRIVER=wayland
-#+end_src
-
-+ X11
-
-#+begin_src sh
-export SDL_VIDEODRIVER=x11
-#+end_src
 
 Source your ~/.bashrc if you are using the bash shell
 
