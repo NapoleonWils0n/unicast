@@ -1353,7 +1353,7 @@ mv build unicast-build-v1
 Change into the directory
 
 #+begin_src sh
-cd ffmpeg-rust-scripts-build-v1
+cd ffmpeg-unicast-v1
 #+end_src
 
 **** rename the build directories for nixos, linux and windows
