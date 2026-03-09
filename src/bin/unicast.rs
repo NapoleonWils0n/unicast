@@ -139,6 +139,7 @@ fn run_ffmpeg(urls: Vec<String>, is_local: bool, mut client: &TcpStream) {
         .args(&ffmpeg_args)
         .stdin(Stdio::inherit())
         .stdout(Stdio::piped())
+        .stderr(Stdio::inherit())
         .spawn()
         .expect("ffmpeg failed to start");
 
