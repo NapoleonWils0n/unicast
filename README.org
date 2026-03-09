@@ -7,7 +7,39 @@ unicast
 
 Stream web URLs, playlists, and local files to a network client.
 
-This script acts as a lightweight HTTP server that pipes media via FFmpeg.
+This script acts as a lightweight HTTP server that pipes media via FFmpeg directly to a connected device.
+
+By default, the script uses port 8080 (configurable with the -x option), so you must ensure this port is open in your firewall to allow incoming connections from devices like an iPad.
+
+*** 1. Local File Streaming (-l)
+
+When streaming a local file, the script performs a pre-stream check using ffprobe.
+
+If the video is already in H.264 format and the audio is AAC, the script simply copies the streams to the network client.
+
+If the file uses different codecs, it is automatically re-encoded to H.264/AAC in real-time before being streamed as an MPEG-TS container.
+
+*** 2. Web URL Streaming (-u)
+
+This option uses yt-dlp to extract direct media links from a single web URL.
+
+The script is designed to handle modern web streaming where audio and video are often served as separate files; it uses FFmpeg to map these streams together into a single cohesive output for the receiver.
+
+When using this mode, the terminal provides three status updates:
+
++ listening: The server is ready and waiting. This is your cue to open the network stream on your receiving device (e.g., VLC on iPad).
+
++ fetching: The script is running yt-dlp to acquire the stream metadata. You will notice a slight delay of a few seconds during this process.
+
++ streaming: The video title is displayed, and the FFmpeg data transfer has begun.
+
+*** 3. Playlist Streaming (-p)
+
+The playlist option allows you to stream every video in a YouTube playlist sequentially.
+
+The script manages the transition between videos automatically while keeping the initial TCP connection to your device open.
+
+This allows the receiving device to treat the entire playlist as one continuous live stream, preventing the need to manually reconnect between items.
 
 *** Supported Operating Systems
 
