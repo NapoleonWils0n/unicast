@@ -1394,3 +1394,43 @@ tar -czvf nixos-unicast-v1.tar.gz nixos-unicast-v1
 #+begin_src sh
 zip -r windows-unicast-v1.zip windows-unicast-v1
 #+end_src
+
+**** create release-files directory
+
+#+begin_src sh
+mkdir -p release-files-v1
+#+end_src
+
+move the tar files and zip into the release-files directory
+
+#+begin_src sh
+mv *-unicast-v[0-9]*{.tar.gz,.zip} release-files-v1/
+#+end_src
+
+**** create checksums for the archives
+
+change directory into the release-files-v1 directory
+
+#+begin_src sh
+cd release-files-v1
+#+end_src
+
+create the checksums
+
+***** linux 
+
+#+begin_src sh
+sha256sum linux-unicast-v1.tar.gz > linux-unicast-v1.tar.gz.sha256
+#+end_src
+
+***** nixos
+
+#+begin_src sh
+sha256sum nixos-unicast-v1.tar.gz > nixos-unicast-v1.tar.gz.sha256
+#+end_src
+
+***** windows
+
+#+begin_src sh
+sha256sum windows-unicast-v1.zip > windows-unicast-v1.zip.sha256
+#+end_src
